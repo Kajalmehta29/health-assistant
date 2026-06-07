@@ -4,6 +4,8 @@ import com.health.healthassistant.model.User;
 import com.health.healthassistant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.health.healthassistant.dto.ApiResponse;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/users")
@@ -13,7 +15,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.registerUser(user);
+    public ResponseEntity<ApiResponse> register(@RequestBody User user) {
+        userService.registerUser(user);
+        return ResponseEntity.ok(new ApiResponse("User registered successfully", true));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@RequestBody User user) {
+
+        userService.loginUser(user.getEmail(), user.getPassword());
+
+        return ResponseEntity.ok(new ApiResponse("Login successful", true));
     }
 }
