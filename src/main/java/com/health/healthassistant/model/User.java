@@ -1,6 +1,7 @@
 package com.health.healthassistant.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
@@ -14,24 +15,98 @@ public class User {
     private String email;
     private String password;
 
-    // Constructors
+    private LocalDate dob;
+    private String gender;
+    private double height;
+    private double weight;
+    private String allergies;
+
+    // ✅ Default Constructor
     public User() {}
 
-    public User(String name, String email, String password) {
+    // ✅ Updated Constructor (with dob instead of age)
+    public User(String name, String email, String password,
+                LocalDate dob, String gender,
+                double height, double weight, String allergies) {
+
         this.name = name;
         this.email = email;
         this.password = password;
+        this.dob = dob;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
+        this.allergies = allergies;
     }
 
-    // Getters & Setters
-    public Long getId() { return id; }
+    // ✅ Getters & Setters
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getName() {
+        return name;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // 🔥 DOB instead of age
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public String getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(String allergies) {
+        this.allergies = allergies;
+    }
 }
