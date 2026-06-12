@@ -8,6 +8,7 @@ import com.health.healthassistant.service.SymptomService;
 import com.health.healthassistant.repository.SymptomHistoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,5 +44,17 @@ public class SymptomController {
     @GetMapping("/insights/{userId}")
     public List<String> getInsights(@PathVariable Long userId) {
         return symptomService.getHealthInsights(userId);
+    }
+    @GetMapping("/suggestions/{userId}")
+    public List<String> getSuggestions(@PathVariable Long userId) {
+        return symptomService.getPreventiveSuggestions(userId);
+    }
+    @GetMapping("/history/{userId}/paged")
+    public Page<SymptomHistoryResponse> getPagedHistory(
+            @PathVariable Long userId,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        return symptomService.getPaginatedHistory(userId, page, size);
     }
 }

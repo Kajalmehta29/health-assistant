@@ -7,9 +7,13 @@ import com.health.healthassistant.model.User;
 import com.health.healthassistant.repository.SymptomDiseaseRepository;
 import com.health.healthassistant.repository.SymptomHistoryRepository;
 import com.health.healthassistant.repository.UserRepository;
+import com.health.healthassistant.security.JwtFilter;
+import com.health.healthassistant.security.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.HashMap;
 import java.util.List;
 import com.health.healthassistant.dto.DiseaseResponse;
@@ -69,7 +73,7 @@ public class SymptomService {
                 .map(r -> r.getDisease() + "(" + r.getConfidence() + ")")
                 .collect(Collectors.joining(","));
 
-        User user = userRepository.findById(1L)
+        User user = userRepository.findById(UserContext.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         SymptomHistory history = new SymptomHistory(
@@ -149,6 +153,62 @@ public class SymptomService {
         }
 
         return insights;
+    }
+    public List<String> getPreventiveSuggestions(Long userId) {
+
+        Map<String, Integer> diseaseMap = getTopDiseases(userId);
+
+        List<String> suggestions = new ArrayList<>();
+
+        for (String disease : diseaseMap.keySet()) {
+
+            switch (disease) {
+
+                case "Flu":
+                    suggestions.add("Drink warm fluids and take proper rest");
+                    suggestions.add("Avoid cold food and environments");
+                    suggestions.add("Stay hydrated");
+                    break;
+
+                case "Dengue":
+                    suggestions.add("Avoid mosquito exposure");
+                    suggestions.add("Use mosquito nets or repellents");
+                    suggestions.add("Keep surroundings clean");
+                    break;
+
+                case "Migraine":
+                    suggestions.add("Avoid stress and bright lights");
+                    suggestions.add("Maintain proper sleep schedule");
+                    break;
+
+                case "Gastric Issue":
+                    suggestions.add("Avoid spicy and oily food");
+                    suggestions.add("Eat light and frequent meals");
+                    break;
+
+                default:
+                    suggestions.add("Maintain a healthy lifestyle");
+            }
+        }
+
+        if (suggestions.isEmpty()) {
+            suggestions.add("No specific suggestions available");
+        }
+
+        return suggestions;
+    }
+    public Page<SymptomHistoryResponse> getPaginatedHistory(Long userId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<SymptomHistory> historyPage =
+                historyRepository.findByUser_Id(userId, pageable);
+
+        return historyPage.map(h -> new SymptomHistoryResponse(
+                h.getSymptoms(),
+                h.getResult(),
+                h.getTimestamp()
+        ));
     }
 
 }
