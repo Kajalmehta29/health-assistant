@@ -1,5 +1,6 @@
 package com.health.healthassistant.controller;
 
+import com.health.healthassistant.dto.ApiResponse;
 import com.health.healthassistant.dto.SymptomHistoryResponse;
 import com.health.healthassistant.dto.SymptomRequest;
 import com.health.healthassistant.dto.DiseaseResponse;
@@ -9,6 +10,7 @@ import com.health.healthassistant.repository.SymptomHistoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +27,39 @@ public class SymptomController {
     private SymptomHistoryRepository historyRepository;
 
     @PostMapping("/check")
-    public List<DiseaseResponse> checkSymptoms(@RequestBody SymptomRequest request) {
-        return symptomService.checkSymptoms(request.getSymptoms());
+    public ResponseEntity<ApiResponse<List<DiseaseResponse>>> checkSymptoms(
+            @RequestBody SymptomRequest request) {
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Symptoms analyzed successfully",
+                        symptomService.checkSymptoms(request.getSymptoms())
+                )
+        );
     }
 
     @GetMapping("/history/{userId}")
-    public List<SymptomHistoryResponse> getHistory(@PathVariable Long userId) {
-        return symptomService.getHistoryResponse(userId);
+    public ResponseEntity<ApiResponse<List<SymptomHistoryResponse>>> getHistory(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "History fetched successfully",
+                        symptomService.getHistoryResponse(userId)
+                )
+        );
     }
     @GetMapping("/top-diseases/{userId}")
-    public Map<String, Integer> getTopDiseases(@PathVariable Long userId) {
-        return symptomService.getTopDiseases(userId);
+    public ResponseEntity<ApiResponse<Map<String, Integer>>> getTopDiseases(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Top diseases fetched",
+                        symptomService.getTopDiseases(userId)
+                )
+        );
     }
     @GetMapping("/recent/{userId}")
     public List<SymptomHistory> getRecentHistory(@PathVariable Long userId) {
@@ -46,15 +70,28 @@ public class SymptomController {
         return symptomService.getHealthInsights(userId);
     }
     @GetMapping("/suggestions/{userId}")
-    public List<String> getSuggestions(@PathVariable Long userId) {
-        return symptomService.getPreventiveSuggestions(userId);
+    public ResponseEntity<ApiResponse<List<String>>> getSuggestions(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Suggestions fetched",
+                        symptomService.getPreventiveSuggestions(userId)
+                )
+        );
     }
     @GetMapping("/history/{userId}/paged")
-    public Page<SymptomHistoryResponse> getPagedHistory(
+    public ResponseEntity<ApiResponse<Page<SymptomHistoryResponse>>> getPagedHistory(
             @PathVariable Long userId,
             @RequestParam int page,
             @RequestParam int size) {
 
-        return symptomService.getPaginatedHistory(userId, page, size);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "History fetched successfully",
+                        symptomService.getPaginatedHistory(userId, page, size)
+                )
+        );
     }
 }

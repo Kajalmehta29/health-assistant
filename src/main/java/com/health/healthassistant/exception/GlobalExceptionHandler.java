@@ -11,12 +11,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiResponse> handleUserNotFound(UserNotFoundException ex) {
         return ResponseEntity.status(404)
-                .body(new ApiResponse(ex.getMessage(), false));
+                .body(new ApiResponse<>(false, ex.getMessage(), null));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse> handleRuntime(RuntimeException ex) {
         return ResponseEntity.status(400)
-                .body(new ApiResponse(ex.getMessage(), false));
+                .body(new ApiResponse<>(false, ex.getMessage(), null));
     }
 }

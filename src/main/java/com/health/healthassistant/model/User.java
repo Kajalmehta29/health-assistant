@@ -14,24 +14,24 @@ public class User {
     private String name;
     private String email;
     private String password;
-
+    private String role;
     private LocalDate dob;
     private String gender;
     private double height;
     private double weight;
     private String allergies;
 
-    // ✅ Default Constructor
+    // Default Constructor
     public User() {}
 
-    // ✅ Updated Constructor (with dob instead of age)
-    public User(String name, String email, String password,
+    public User(String name, String email, String password, String role,
                 LocalDate dob, String gender,
                 double height, double weight, String allergies) {
 
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
         this.dob = dob;
         this.gender = gender;
         this.height = height;
@@ -39,7 +39,7 @@ public class User {
         this.allergies = allergies;
     }
 
-    // ✅ Getters & Setters
+    // Getters & Setters
 
     public Long getId() {
         return id;
@@ -68,8 +68,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
-    // 🔥 DOB instead of age
     public LocalDate getDob() {
         return dob;
     }

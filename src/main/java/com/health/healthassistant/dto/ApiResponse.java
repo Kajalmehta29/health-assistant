@@ -1,17 +1,20 @@
 package com.health.healthassistant.dto;
 
-public class ApiResponse {
+public class ApiResponse<T> {
 
-    private String message;
     private boolean success;
+    private String message;
+    private T data;
 
     public ApiResponse() {}
 
-    public ApiResponse(String message, boolean success) {
-        this.message = message;
+    public ApiResponse(boolean success, String message, T data) {
         this.success = success;
+        this.message = message;
+        this.data = data;
     }
 
-    public String getMessage() { return message; }
     public boolean isSuccess() { return success; }
+    public String getMessage() { return message; }
+    public T getData() { return data; }
 }

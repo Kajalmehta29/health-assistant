@@ -18,27 +18,46 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> register(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody User user) {
+
         userService.registerUser(user);
-        return ResponseEntity.ok(new ApiResponse("User registered successfully", true));
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "User registered successfully",
+                        null
+                )
+        );
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<String>> login(@RequestBody User user) {
 
         User loggedInUser = userService.loginUser(user.getEmail(), user.getPassword());
-
         String token = jwtUtil.generateToken(loggedInUser.getId());
 
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Login successful",
+                        token
+                )
+        );
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse> updateUser(
+    public ResponseEntity<ApiResponse<String>> updateUser(
             @PathVariable Long id,
             @RequestBody User user) {
 
         userService.updateUser(id, user);
 
-        return ResponseEntity.ok(new ApiResponse("User updated successfully", true));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "User updated successfully",
+                        null
+                )
+        );
     }
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
@@ -48,10 +67,20 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable Long id) {
 
         userService.deleteUser(id);
 
-        return ResponseEntity.ok(new ApiResponse("User deleted successfully", true));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "User deleted successfully",
+                        null
+                )
+        );
+    }
+    @GetMapping("/test")
+    public String adminOnly() {
+        return "Only admin can see this";
     }
 }

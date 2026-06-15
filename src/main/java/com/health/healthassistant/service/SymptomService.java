@@ -7,7 +7,6 @@ import com.health.healthassistant.model.User;
 import com.health.healthassistant.repository.SymptomDiseaseRepository;
 import com.health.healthassistant.repository.SymptomHistoryRepository;
 import com.health.healthassistant.repository.UserRepository;
-import com.health.healthassistant.security.JwtFilter;
 import com.health.healthassistant.security.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +72,13 @@ public class SymptomService {
                 .map(r -> r.getDisease() + "(" + r.getConfidence() + ")")
                 .collect(Collectors.joining(","));
 
-        User user = userRepository.findById(UserContext.getUserId())
+        Long userId = UserContext.getUserId();
+
+        if (userId == null) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         SymptomHistory history = new SymptomHistory(
@@ -84,6 +89,7 @@ public class SymptomService {
         );
 
         historyRepository.save(history);
+
         return results;
 
 
